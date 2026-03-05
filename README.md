@@ -1,34 +1,34 @@
-# HireOps Backend API 🚀
+# 🚀 HireOps Backend (Laravel)
 
-HireOps Backend is a scalable backend service designed to automate hiring and recruitment workflows.
-This project provides REST APIs to manage candidates, job postings, and recruitment processes efficiently.
+HireOps Backend is a Laravel-based backend system designed to manage employees and automate salary processing.
+This project provides a structured backend architecture for handling employee data, salary management, and internal organizational workflows.
 
-The backend is built with modern technologies and follows a modular architecture for scalability and maintainability.
+It is built using the **Laravel Framework** and follows a clean MVC architecture for scalability, maintainability, and performance.
 
 ---
 
 # ✨ Features
 
-* 🔐 Authentication & Authorization (JWT)
-* 👨‍💼 Candidate Management
-* 📄 Job Posting Management
-* 📊 Recruitment Workflow Automation
-* 📁 Resume / Candidate Data Handling
-* 🔍 API based recruitment automation
-* ⚡ Modular backend architecture
+* 👨‍💼 Employee Management System
+* 💰 Salary Automation
+* 🔐 Authentication & Authorization
+* 📊 Employee Data Management
+* ⚙️ RESTful Backend Architecture
+* 🧾 Salary Processing Logic
+* 📁 Modular Laravel MVC Structure
 
 ---
 
-# 🛠️ Tech Stack
+# 🛠 Tech Stack
 
-Backend technologies used in this project:
+Technologies used in this project:
 
-* Node.js
-* Express.js
-* MongoDB / MySQL (depending on your config)
-* JWT Authentication
-* REST API Architecture
-* dotenv for environment variables
+* **PHP**
+* **Laravel Framework**
+* **MySQL / MariaDB**
+* **Blade Template Engine**
+* **Composer**
+* **REST API Architecture**
 
 ---
 
@@ -37,14 +37,19 @@ Backend technologies used in this project:
 ```
 hireops-backend-main
 │
-├── controllers/      # Business logic
-├── models/           # Database models
-├── routes/           # API routes
-├── middlewares/      # Auth & validation middleware
-├── config/           # Database configuration
-├── utils/            # Helper functions
-├── app.js            # App entry
-└── package.json
+├── app/                # Application core logic
+├── bootstrap/          # Framework bootstrap files
+├── config/             # Configuration files
+├── database/           # Migrations & seeders
+├── public/             # Public assets and entry point
+├── resources/views/    # Blade templates
+├── routes/             # Application routes
+├── storage/            # Logs & cache
+├── tests/              # Application tests
+│
+├── artisan             # Laravel CLI
+├── composer.json       # PHP dependencies
+└── README.md
 ```
 
 ---
@@ -58,83 +63,87 @@ git clone https://github.com/niloykumarbarman/hireops-backend-main.git
 cd hireops-backend-main
 ```
 
+---
+
 ### 2️⃣ Install dependencies
 
 ```bash
-npm install
-```
-
-### 3️⃣ Setup environment variables
-
-Create `.env` file
-
-```
-PORT=5000
-DATABASE_URL=your_database_url
-JWT_SECRET=your_secret_key
-```
-
-### 4️⃣ Run the server
-
-```bash
-npm start
-```
-
-or development mode
-
-```bash
-npm run dev
+composer install
 ```
 
 ---
 
-# 📡 API Endpoints
+### 3️⃣ Setup environment file
 
-### Authentication
+Copy the environment example file:
 
-```
-POST /api/auth/register
-POST /api/auth/login
-```
-
-### Candidates
-
-```
-GET /api/candidates
-POST /api/candidates
-PUT /api/candidates/:id
-DELETE /api/candidates/:id
+```bash
+cp .env.example .env
 ```
 
-### Jobs
+Then configure your database inside `.env`:
 
 ```
-GET /api/jobs
-POST /api/jobs
-PUT /api/jobs/:id
-DELETE /api/jobs/:id
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
 ```
 
 ---
 
-# 🤖 Automation
+### 4️⃣ Generate application key
 
-This backend automates several recruitment tasks such as:
+```bash
+php artisan key:generate
+```
 
-* Candidate profile management
-* Job posting processing
-* Recruitment pipeline management
-* Automated API workflow handling
+---
+
+### 5️⃣ Run database migrations
+
+```bash
+php artisan migrate
+```
+
+---
+
+### 6️⃣ Run the server
+
+```bash
+php artisan serve
+```
+
+Server will run at:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+# 📊 Main Modules
+
+### Employee Management
+
+* Add Employee
+* Update Employee Information
+* Manage Employee Records
+
+### Salary Automation
+
+* Automated Salary Calculation
+* Salary Data Management
+* Payroll Processing Logic
 
 ---
 
 # 🚀 Future Improvements
 
-* AI candidate matching
-* Email automation
-* Resume parsing
-* Interview scheduling automation
-* Analytics dashboard
+* Employee attendance tracking
+* Advanced payroll system
+* Role-based access control
+* Reporting & analytics dashboard
+* API documentation (Swagger)
 
 ---
 
@@ -150,4 +159,8 @@ https://github.com/niloykumarbarman
 # 📜 License
 
 This project is licensed under the MIT License.
+
+
+
+
 
