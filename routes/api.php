@@ -3,16 +3,22 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Api\CompanyController;
+
+use App\Http\Controllers\API\CompanyController;
 use App\Http\Controllers\API\EmployeeController;
 use App\Http\Controllers\API\AttendanceController;
-use App\Http\Controllers\Api\SalaryController;
-use App\Http\Controllers\Api\CompanyCostController;
+use App\Http\Controllers\API\SalaryController;
+use App\Http\Controllers\API\CompanyCostController;
 
 
+/*
+|--------------------------------------------------------------------------
+| Public Login Route
+|--------------------------------------------------------------------------
+*/
 
-// Public login route
 Route::post('/login', function (Request $request) {
+
     $request->validate([
         'email' => 'required|email',
         'password' => 'required',
@@ -25,48 +31,88 @@ Route::post('/login', function (Request $request) {
     }
 
     $user = Auth::user();
+
     $token = $user->createToken('auth_token')->plainTextToken;
 
     return response()->json([
         'token' => $token,
         'user' => $user
     ]);
+
 });
 
-// Authenticated user info
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
-// Logout
-Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
-    $request->user()->currentAccessToken()->delete();
-    return response()->json(['message' => 'Logged out successfully']);
-});
+/*
+|--------------------------------------------------------------------------
+| Protected Routes
+|--------------------------------------------------------------------------
+*/
 
-// Admin only routes
-// Admin only routes (Spatie role middleware)
-Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    // Company CRUD (apiResource )
-    Route::apiResource('companies', CompanyController::class);
+Route::middleware('auth:sanctum')->group(function () {
 
-    // Company-specific Employees (nested routes)
-    Route::prefix('companies/{company}')->group(function () {
-        // Employee list for a specific company
-        Route::get('/employees', [EmployeeController::class, 'index']);
-
-        // Create new employee under a company
-        Route::post('/employees', [EmployeeController::class, 'store']);
+    // Logged user info
+    Route::get('/user', function (Request $request) {
+        return $request->user();
     });
 
-    // Global employee routes (update & delete - ID )
-    Route::put('/employees/{employee}', [EmployeeController::class, 'update']);
-    Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
+    // Logout
+    Route::post('/logout', function (Request $request) {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Logged out successfully'
+        ]);
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Routes
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('role:admin')->group(function () {
+
+        // Company CRUD
+        Route::apiResource('companies', CompanyController::class);
+
+        // Company Employees
+        Route::prefix('companies/{company}')->group(function () {
+
+            // Employee list
+            Route::get('/employees', [EmployeeController::class, 'index']);
+
+            // Create employee
+            Route::post('/employees', [EmployeeController::class, 'store']);
+
+        });
+
+        // Employee update/delete
+        Route::put('/employees/{employee}', [EmployeeController::class, 'update']);
+        Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
+
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Employee System
+    |--------------------------------------------------------------------------
+    */
+
+    // Attendance
+    Route::apiResource('attendances', AttendanceController::class);
+
+    // Salary
+    Route::apiResource('salaries', SalaryController::class);
+
+    // Employee salary history
+    Route::get('employees/{id}/salaries', [SalaryController::class, 'employeeSalary']);
+
+    // Company Costs
+    Route::apiResource('company-costs', CompanyCostController::class);
+
+    // Company cost list
+    Route::get('/company/{company_id}/costs', [CompanyCostController::class, 'companyCosts']);
+
 });
-Route::apiResource('attendances', AttendanceController::class);
-
-Route::apiResource('salaries', SalaryController::class);
-
-Route::get('employees/{id}/salaries', [SalaryController::class, 'employeeSalary']);
-Route::apiResource('company-costs', CompanyCostController::class);
-Route::get('/company/{company_id}/costs', [CompanyCostController::class, 'companyCosts']);
